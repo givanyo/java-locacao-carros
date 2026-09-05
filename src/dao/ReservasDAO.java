@@ -16,7 +16,7 @@ public class ReservasDAO {
 		this.cliente = cliente;
 	}
 	
-	public List<InfoReserva> ConsultarReservas() {
+	public List<InfoReserva> consultarReservas() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
