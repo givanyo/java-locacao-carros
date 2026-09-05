@@ -2,6 +2,9 @@ package controller;
 import view.TelaPrincipal;
 import view.TelaLogin;
 import model.Usuario;
+
+import javax.swing.JOptionPane;
+
 import dao.LoginDAO;
 public class LoginController {
 	private TelaPrincipal telaPrincipal;
@@ -18,13 +21,18 @@ public class LoginController {
 	public void consultar() {
 		String tentativaLogin = telaLogin.getTxtLogin();
 		String senha = telaLogin.getTxtSenha();
-	
 		login.setLogin(tentativaLogin);
 		login.setSenha(senha);
 		
 		Usuario usuario = dao.consultar();
 		if(usuario == null) {
-			System.out.println("Usuário não existe ou a senha está incorreta");
+			System.out.println("Usuário não encontrado");
+		     JOptionPane.showMessageDialog(
+	                    telaLogin,
+	                    "As informações de login estão incorretas ou o usuário não existe.",
+	                    "Usuário não encontrado",
+	                    JOptionPane.WARNING_MESSAGE
+	             );
 			return;
 		}
 		
