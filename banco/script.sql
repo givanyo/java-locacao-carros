@@ -117,7 +117,6 @@ INSERT INTO carro (id_categoria, modelo, placa) VALUES
     (3, 'FIAT ARGO 1.0', 'OPQ1234'),
     (3, 'VW POLO 1.0', 'RST1234');
     
-
 DELIMITER // 
 CREATE TRIGGER after_inserir_reserva
 AFTER INSERT ON pre_reserva
@@ -141,3 +140,14 @@ INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VA
     (1, 5, '2026-09-26', 7),
     (2, 2, '2026-09-25', 3),
     (3, 3, '2026-11-11', 4);
+    
+DELIMITER //
+CREATE PROCEDURE gerarLocacao(
+	IN id_pr INT,
+    IN data_atual DATE
+)
+BEGIN
+	INSERT INTO locacao(id_pre_reserva, data_inicio, data_fim, status)
+    SELECT id, data_atual, previsao_inicio + INTERVAL duracao_dias DAY, 'Ativa' FROM pre_reserva WHERE id = id_pr;
+END //
+DELIMITER ;
