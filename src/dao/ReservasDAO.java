@@ -12,6 +12,10 @@ import util.Conexao;
 
 public class ReservasDAO {
 	private Usuario cliente;
+	public ReservasDAO(Usuario cliente) {
+		this.cliente = cliente;
+	}
+	
 	public List<InfoReserva> ConsultarReservas() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
