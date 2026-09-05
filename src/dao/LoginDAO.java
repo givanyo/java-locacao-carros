@@ -14,7 +14,6 @@ public class LoginDAO {
 	}
 	
 	public Usuario consultar() {
-			System.out.println("tentando consultar");
 	        Connection conn = null;
 	        PreparedStatement stmt = null;
 	        ResultSet rs = null;

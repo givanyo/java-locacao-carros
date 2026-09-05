@@ -14,11 +14,6 @@ public class Usuario {
 		this.adm = adm;
 	}
 	
-	public Usuario(String login, String senha) {
-		this.login = login;
-		this.senha = senha;
-	}
-	
 	public int getIdUsuario() {
 		return idUsuario;
 	}
