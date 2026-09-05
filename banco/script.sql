@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS transacao(
 	sinal DECIMAL(10, 2) NOT NULL,
     valor_restante DECIMAL(10, 2) NOT NULL,
     valor_total DECIMAL(10, 2) NOT NULL,
-    data_pag_sinal DECIMAL(10, 2) NOT NULL,
-    data_pagamento_restante DECIMAL(10, 2) NOT NULL
+    data_pag_sinal DECIMAL(10, 2),
+    data_pag_restante DECIMAL(10, 2)
 );
 
 INSERT INTO usuario (nome_usuario, email, senha, adm) VALUES
@@ -116,6 +116,25 @@ INSERT INTO carro (id_categoria, modelo, placa) VALUES
     (3, 'HYUNDAI HB20 1.0', 'LMN1234'),
     (3, 'FIAT ARGO 1.0', 'OPQ1234'),
     (3, 'VW POLO 1.0', 'RST1234');
+    
+
+DELIMITER // 
+CREATE TRIGGER after_inserir_reserva
+AFTER INSERT ON pre_reserva
+FOR EACH ROW
+BEGIN
+		INSERT INTO transacao (id_pre_reserva, sinal, valor_restante, valor_total)
+        SELECT 
+        NEW.id,
+        categoria.valor_diaria * NEW.duracao_dias * 0.4,
+        categoria.valor_diaria * NEW.duracao_dias * 0.6,
+        categoria.valor_diaria * NEW.duracao_dias
+        FROM carro
+        INNER JOIN categoria
+        ON carro.id_categoria = categoria.id
+        WHERE carro.id = NEW.id_carro;
+END //
+DELIMITER ;
 
 INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VALUES
     (1, 6, '2026-09-20', 5),
