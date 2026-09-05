@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS transacao(
 	sinal DECIMAL(10, 2) NOT NULL,
     valor_restante DECIMAL(10, 2) NOT NULL,
     valor_total DECIMAL(10, 2) NOT NULL,
-    data_pag_sinal DECIMAL(10, 2),
-    data_pag_restante DECIMAL(10, 2)
+    data_pag_sinal DATE
+    data_pag_restante DATE
 );
 
 INSERT INTO usuario (nome_usuario, email, senha, adm) VALUES
