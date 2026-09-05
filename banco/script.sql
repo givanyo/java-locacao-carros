@@ -141,7 +141,7 @@ INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VA
     (3, 3, '2026-11-11', 4);
     
 DELIMITER //
-CREATE PROCEDURE gerarLocacao(
+CREATE PROCEDURE gerar_locacao(
 	IN id_pr INT,
     IN data_atual DATE
 )
