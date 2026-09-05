@@ -6,10 +6,11 @@ import java.sql.ResultSet;
 import model.Usuario;
 import util.Conexao;
 public class LoginDAO {
-	private Usuario tentativa;
+	private Usuario tentativaLogin;
 	
-	public LoginDAO(Usuario tentativa) {
-		this.tentativa = tentativa;
+	public LoginDAO(Usuario tentativaLogin) {
+		this.tentativaLogin = tentativaLogin;
+		System.out.println("tentativa");
 	}
 	
 	public Usuario consultar() {
@@ -20,9 +21,9 @@ public class LoginDAO {
 	        try {
 	        	conn = Conexao.conectar();
 	        	stmt = conn.prepareStatement(sql);
-	        	stmt.setString(1, tentativa.getLogin());
-	        	stmt.setString(2, tentativa.getLogin());
-	        	stmt.setString(3, tentativa.getSenha());
+	        	stmt.setString(1, tentativaLogin.getLogin());
+	        	stmt.setString(2, tentativaLogin.getLogin());
+	        	stmt.setString(3, tentativaLogin.getSenha());
 	        	rs = stmt.executeQuery();
 	        	if(rs.next()) {
 	        		int id = rs.getInt("id");

@@ -2,11 +2,17 @@ package model;
 
 public class Usuario {
 	private int idUsuario;
-	private String nomeUsuario;
-	private String email;
 	private String senha;
+	private String login;
 	private boolean adm;
 	
+	public Usuario() {
+		
+	}
+	public Usuario(int idUsuario, boolean adm) {
+		this.idUsuario = idUsuario;
+		this.adm = adm;
+	}
 	
 	public int getIdUsuario() {
 		return idUsuario;
@@ -14,28 +20,25 @@ public class Usuario {
 	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-	public String getNomeUsuario() {
-		return nomeUsuario;
-	}
-	public void setNomeUsuario(String nomeUsuario) {
-		this.nomeUsuario = nomeUsuario;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	public String getSenha() {
 		return senha;
 	}
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	public boolean isAdm() {
+	public boolean getAdm() {
 		return adm;
 	}
 	public void setAdm(boolean adm) {
 		this.adm = adm;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
 	}
 }

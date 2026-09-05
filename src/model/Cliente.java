@@ -1,6 +1,6 @@
 package model;
 
-public class Cliente extends Usuario {
+public class Cliente {
 	private int idCliente;
 	private String nome;
 	private String telefone;
