@@ -10,9 +10,8 @@ CREATE TABLE IF NOT EXISTS usuario(
 );
 
 CREATE TABLE IF NOT EXISTS cliente(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_usuario INT NOT NULL UNIQUE,
-    FOREIGN KEY (id_usuario)
+	id INT PRIMARY KEY NOT NULL,
+    FOREIGN KEY (id)
 		REFERENCES usuario(id),
 	nome VARCHAR(100) NOT NULL,
     telefone VARCHAR(11) NOT NULL,
@@ -91,7 +90,7 @@ INSERT INTO usuario (nome_usuario, email, senha, adm) VALUES
     ('marcos.ferreira', 'marcosferreira88@email.com', 'marc2026', FALSE),
     ('admin', 'admin@email.com', 'admin2026', TRUE);
 
-INSERT INTO cliente (id_usuario, nome, telefone, cnh, cpf) VALUES
+INSERT INTO cliente (id, nome, telefone, cnh, cpf) VALUES
 	(1, 'Jeffinho Riper', '11912345678', '00123456789', '12345678901'),
     (2, 'Beatriz Damasco', '21912345678', '00223456789', '22345678901'),
     (3, 'Rita de Cássia', '31912345678', '00323456789', '32345678901'),
@@ -142,12 +141,37 @@ INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VA
     (3, 3, '2026-11-11', 4);
     
 DELIMITER //
-CREATE PROCEDURE gerarLocacao(
+CREATE PROCEDURE gerar_locacao(
 	IN id_pr INT,
     IN data_atual DATE
 )
 BEGIN
 	INSERT INTO locacao(id_pre_reserva, data_inicio, data_fim, status)
     SELECT id, data_atual, previsao_inicio + INTERVAL duracao_dias DAY, 'Ativa' FROM pre_reserva WHERE id = id_pr;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE selecionar_info_reservas(IN id_cliente INT)
+BEGIN
+	SELECT 
+	categoria.grupo,
+	carro.modelo,
+	pre_reserva.duracao_dias, 
+	transacao.sinal,
+	transacao.valor_restante,
+	transacao.valor_total,
+    transacao.data_pag_sinal,
+	transacao.data_pag_restante
+	FROM transacao
+	INNER JOIN pre_reserva
+	ON transacao.id_pre_reserva = pre_reserva.id
+	INNER JOIN cliente
+	ON pre_reserva.id_cliente = cliente.id
+	INNER JOIN carro
+	ON pre_reserva.id_carro = carro.id
+	INNER JOIN categoria
+	ON carro.id_categoria = categoria.id 
+	WHERE cliente.id = id_cliente;
 END //
 DELIMITER ;

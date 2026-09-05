@@ -10,7 +10,6 @@ public class LoginDAO {
 	
 	public LoginDAO(Usuario tentativaLogin) {
 		this.tentativaLogin = tentativaLogin;
-		System.out.println("tentativa");
 	}
 	
 	public Usuario consultar() {
