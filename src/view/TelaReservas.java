@@ -113,7 +113,7 @@ public class TelaReservas extends JPanel {
 				return;
 			}
 			
-			if(reservaSelecionada.getDataPagSinal() != null) {
+			if(reservaSelecionada.getDataPagRestante() != null) {
 				JOptionPane.showMessageDialog(this, "Você já pagou o restante.");
 				return;
 			}
