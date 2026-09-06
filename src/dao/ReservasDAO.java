@@ -54,6 +54,7 @@ public class ReservasDAO {
 			while(rs.next()) {
 				InfoReserva infoReserva = new InfoReserva();
 				
+				infoReserva.setIdReserva(rs.getInt("id"));
 				infoReserva.setGrupoCarro(rs.getString("grupo"));
 				infoReserva.setModeloCarro(rs.getString("modelo"));
 				

@@ -153,7 +153,8 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE selecionar_info_reservas(IN id_cliente INT)
 BEGIN
-	SELECT 
+	SELECT
+    pre_reserva.id,
 	categoria.grupo,
 	carro.modelo,
 	pre_reserva.duracao_dias, 

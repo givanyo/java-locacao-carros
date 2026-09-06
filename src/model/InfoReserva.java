@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public class InfoReserva {
+	private int idReserva;
 	private String grupoCarro;
 	private String modeloCarro;
 	private int duracaoDias;
@@ -74,5 +75,11 @@ public class InfoReserva {
 	}
 	public void setDataPagRestante(LocalDate dataPagRestante) {
 		this.dataPagRestante = dataPagRestante;
+	}
+	public int getIdReserva() {
+		return idReserva;
+	}
+	public void setIdReserva(int idReserva) {
+		this.idReserva = idReserva;
 	}
 }
