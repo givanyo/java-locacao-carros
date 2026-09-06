@@ -197,3 +197,21 @@ BEGIN
 	DELETE FROM pre_reserva WHERE id = id_pre_reserva;
 END // 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE selecionar_info_locacoes(IN id_cliente INT)
+BEGIN
+	SELECT 
+	locacao.id,
+	(SELECT titulo FROM categoria WHERE carro.id_categoria = categoria.id) AS tipo_carro,
+	carro.modelo,
+	locacao.data_inicio, 
+	locacao.data_fim
+	FROM locacao
+	INNER JOIN pre_reserva
+	ON locacao.id = pre_reserva.id
+	INNER JOIN carro ON pre_reserva.id_carro = carro.id
+	WHERE pre_reserva.id_cliente = id_cliente
+	ORDER BY locacao.data_inicio ASC;
+END // 
+DELIMITER ;
