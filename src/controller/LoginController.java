@@ -38,7 +38,7 @@ public class LoginController {
 		
 		System.out.println("O usuário existe: " + "id: " + usuario.getIdUsuario() + ", é adm: " + usuario.getAdm());
 		
-		// telaPrincipal.trocarTela(tela de reservas, usuario);
+		telaPrincipal.trocarTelaReservas(usuario);
 	}
 	
 	

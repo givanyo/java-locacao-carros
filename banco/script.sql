@@ -72,9 +72,8 @@ CREATE TABLE IF NOT EXISTS locacao(
 );
 
 CREATE TABLE IF NOT EXISTS transacao(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_pre_reserva INT UNIQUE NOT NULL,
-    FOREIGN KEY(id_pre_reserva)
+	id INT PRIMARY KEY NOT NULL,
+    FOREIGN KEY(id)
 		REFERENCES pre_reserva(id),
 	sinal DECIMAL(10, 2) NOT NULL,
     valor_restante DECIMAL(10, 2) NOT NULL,
@@ -121,7 +120,7 @@ CREATE TRIGGER after_inserir_reserva
 AFTER INSERT ON pre_reserva
 FOR EACH ROW
 BEGIN
-		INSERT INTO transacao (id_pre_reserva, sinal, valor_restante, valor_total)
+		INSERT INTO transacao (id, sinal, valor_restante, valor_total)
         SELECT 
         NEW.id,
         categoria.valor_diaria * NEW.duracao_dias * 0.4,
@@ -154,7 +153,8 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE selecionar_info_reservas(IN id_cliente INT)
 BEGIN
-	SELECT 
+	SELECT
+    pre_reserva.id,
 	categoria.grupo,
 	carro.modelo,
 	pre_reserva.duracao_dias, 
@@ -165,7 +165,7 @@ BEGIN
 	transacao.data_pag_restante
 	FROM transacao
 	INNER JOIN pre_reserva
-	ON transacao.id_pre_reserva = pre_reserva.id
+	ON transacao.id = pre_reserva.id
 	INNER JOIN cliente
 	ON pre_reserva.id_cliente = cliente.id
 	INNER JOIN carro
@@ -173,5 +173,19 @@ BEGIN
 	INNER JOIN categoria
 	ON carro.id_categoria = categoria.id 
 	WHERE cliente.id = id_cliente;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE pagar_sinal(IN id_pre_reserva INT)
+BEGIN
+UPDATE transacao SET data_pag_sinal = CURDATE() WHERE id = id_pre_reserva;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE pagar_restante(IN id_pre_reserva INT) 
+BEGIN 
+UPDATE transacao SET data_pag_restante = CURDATE() WHERE id = id_pre_reserva;
 END //
 DELIMITER ;
