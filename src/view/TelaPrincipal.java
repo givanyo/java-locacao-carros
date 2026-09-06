@@ -7,6 +7,7 @@ public class TelaPrincipal extends JFrame {
 	private JPanel telaExibida;
 	private String tituloExibido;
 	public static final String[] TELALOGIN = {"telaLogin", "Login"};
+	public static final String[] TELACLIENTE = {"telaCliente", "Sistema de Locação de Carros (CLIENTE)"};
 	public static final String[] TELARESERVAS = {"telaReservas", "Suas reservas"};
 	
 	public TelaPrincipal() {
@@ -21,14 +22,20 @@ public class TelaPrincipal extends JFrame {
 			this.telaExibida = new TelaLogin(this);
 			this.tituloExibido = TELALOGIN[1];
 			atualizar();
+			setSize(600, 400);
 			return;
 		}
+		
 	}
 	
-	public void trocarTelaReservas(Usuario usuario) {
-		this.telaExibida = new TelaReservas(usuario);
-		this.tituloExibido = "Reservas";
+	public void trocarTela(Usuario usuario) {
+		if(usuario.getAdm() == true) {
+			return;
+		}
+		this.telaExibida = new TelaCliente(usuario);
+		this.tituloExibido = TELACLIENTE[1];
 		atualizar();
+		setSize(800, 480);
 		return;
 	}
 	
