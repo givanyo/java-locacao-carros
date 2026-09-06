@@ -2,12 +2,12 @@ package model;
 
 import java.time.LocalDate;
 
-public class Locacao {
+public class InfoLocacao {
 	private int idLocacao;
-	private int idPreReserva;
+	private String tipoCarro;
+	private String modeloCarro;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private String status;
 	
 	public int getIdLocacao() {
 		return idLocacao;
@@ -15,11 +15,17 @@ public class Locacao {
 	public void setIdLocacao(int idLocacao) {
 		this.idLocacao = idLocacao;
 	}
-	public int getIdPreReserva() {
-		return idPreReserva;
+	public String getTipoCarro() {
+		return tipoCarro;
 	}
-	public void setIdPreReserva(int idPreReserva) {
-		this.idPreReserva = idPreReserva;
+	public void setTipoCarro(String tipoCarro) {
+		this.tipoCarro = tipoCarro;
+	}
+	public String getModeloCarro() {
+		return modeloCarro;
+	}
+	public void setModeloCarro(String modeloCarro) {
+		this.modeloCarro = modeloCarro;
 	}
 	public LocalDate getDataInicio() {
 		return dataInicio;
@@ -32,11 +38,5 @@ public class Locacao {
 	}
 	public void setDataFim(LocalDate dataFim) {
 		this.dataFim = dataFim;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
 	}
 }

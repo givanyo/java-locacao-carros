@@ -12,6 +12,7 @@ public class TelaCliente extends JPanel {
 	private JTabbedPane abasCliente;
 
 	private TelaReservas telaReservas;
+	private TelaLocacao telaLocacao;
 
 	public TelaCliente(Usuario usuario) {
 		this.usuario = usuario;
@@ -28,8 +29,15 @@ public class TelaCliente extends JPanel {
 		telaReservas = new TelaReservas(usuario);
 		abasCliente.addTab("Minhas Reservas", telaReservas);
 
+		telaLocacao = new TelaLocacao(usuario);
+		abasCliente.addTab("Minhas Locações", telaLocacao);
 	}
 
 	private void configurarEventos() {
+		abasCliente.addChangeListener(e -> {
+			if (abasCliente.getSelectedComponent() == telaLocacao) {
+				telaLocacao.atualizar();
+			}
+		});
 	}
 }

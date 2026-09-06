@@ -62,10 +62,10 @@ CREATE TABLE IF NOT EXISTS pre_reserva(
 );
 
 CREATE TABLE IF NOT EXISTS locacao(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_pre_reserva INT UNIQUE NOT NULL,
-		FOREIGN KEY(id_pre_reserva)
-			REFERENCES pre_reserva(id),
+	id INT PRIMARY KEY,
+		FOREIGN KEY(id)
+			REFERENCES pre_reserva(id)
+            ON DELETE CASCADE,
 	data_inicio DATE NOT NULL,
     data_fim DATE NOT NULL,
     status VARCHAR(100) NOT NULL
@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS locacao(
 CREATE TABLE IF NOT EXISTS transacao(
 	id INT PRIMARY KEY NOT NULL,
     FOREIGN KEY(id)
-		REFERENCES pre_reserva(id),
+		REFERENCES pre_reserva(id)
+        ON DELETE CASCADE,
 	sinal DECIMAL(10, 2) NOT NULL,
     valor_restante DECIMAL(10, 2) NOT NULL,
     valor_total DECIMAL(10, 2) NOT NULL,
@@ -142,13 +143,10 @@ INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VA
     (3, 3, '2026-11-11', 4);
 
 DELIMITER //
-CREATE PROCEDURE gerar_locacao(
-	IN id_pr INT,
-    IN data_atual DATE
-)
+CREATE PROCEDURE gerar_locacao(IN id_pr INT)
 BEGIN
-	INSERT INTO locacao(id_pre_reserva, data_inicio, data_fim, status)
-    SELECT id, data_atual, previsao_inicio + INTERVAL duracao_dias DAY, 'Ativa' FROM pre_reserva WHERE id = id_pr;
+	INSERT INTO locacao(id, data_inicio, data_fim, status)
+    SELECT id, previsao_inicio, previsao_inicio + INTERVAL duracao_dias DAY, 'Confirmada' FROM pre_reserva WHERE id = id_pr;
 END //
 DELIMITER ;
 
@@ -174,20 +172,46 @@ BEGIN
 	ON pre_reserva.id_carro = carro.id
 	INNER JOIN categoria
 	ON carro.id_categoria = categoria.id 
-	WHERE cliente.id = id_cliente;
+	WHERE cliente.id = id_cliente AND pre_reserva.id NOT IN (SELECT id FROM locacao);
 END //
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE pagar_sinal(IN id_pre_reserva INT)
 BEGIN
-UPDATE transacao SET data_pag_sinal = CURDATE() WHERE id = id_pre_reserva;
+	UPDATE transacao SET data_pag_sinal = CURDATE() WHERE id = id_pre_reserva;
 END //
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE pagar_restante(IN id_pre_reserva INT) 
 BEGIN 
-UPDATE transacao SET data_pag_restante = CURDATE() WHERE id = id_pre_reserva;
+	UPDATE transacao SET data_pag_restante = CURDATE() WHERE id = id_pre_reserva;
 END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE cancelar_reserva(IN id_pre_reserva INT)
+BEGIN
+	UPDATE carro SET disponivel = TRUE WHERE id = (SELECT id_carro FROM pre_reserva WHERE id = id_pre_reserva); 
+	DELETE FROM pre_reserva WHERE id = id_pre_reserva;
+END // 
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE selecionar_info_locacoes(IN id_cliente INT)
+BEGIN
+	SELECT 
+	locacao.id,
+	(SELECT titulo FROM categoria WHERE carro.id_categoria = categoria.id) AS tipo_carro,
+	carro.modelo,
+	locacao.data_inicio, 
+	locacao.data_fim
+	FROM locacao
+	INNER JOIN pre_reserva
+	ON locacao.id = pre_reserva.id
+	INNER JOIN carro ON pre_reserva.id_carro = carro.id
+	WHERE pre_reserva.id_cliente = id_cliente
+	ORDER BY locacao.data_inicio ASC;
+END // 
 DELIMITER ;
