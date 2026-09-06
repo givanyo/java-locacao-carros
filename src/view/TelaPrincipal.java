@@ -21,6 +21,7 @@ public class TelaPrincipal extends JFrame {
 			this.telaExibida = new TelaLogin(this);
 			this.tituloExibido = TELALOGIN[1];
 			atualizar();
+			setSize(600, 400);
 			return;
 		}
 	}
@@ -29,6 +30,7 @@ public class TelaPrincipal extends JFrame {
 		this.telaExibida = new TelaReservas(usuario);
 		this.tituloExibido = "Reservas";
 		atualizar();
+		setSize(800, 480);
 		return;
 	}
 	

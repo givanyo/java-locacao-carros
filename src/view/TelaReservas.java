@@ -49,7 +49,7 @@ public class TelaReservas extends JPanel {
 		add(painelTitulo, BorderLayout.NORTH);
 		painelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JLabel lblTitulo = new JLabel("Suas Reservas");
+		JLabel lblTitulo = new JLabel("Suas pré-reservas de carros");
 		painelTitulo.add(lblTitulo);
 
 		JPanel painelReservas = new JPanel();
