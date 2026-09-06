@@ -14,11 +14,20 @@ import model.Usuario;
 import controller.ReservasController;
 
 public class TelaReservas extends JPanel {
+	private List <InfoReserva> reservasAtuais;
+	private static final long serialVersionUID = 1L;
 	private JTable tabelaReservas;
 	private DefaultTableModel modeloTabela;
 	private Usuario usuario;
 	private ReservasController controller;
-
+	
+	private static final String SINAL = "sinal";
+	private static final String RESTANTE = "restante";
+	
+	private JButton btnIniciarLocacao;
+	private JButton btnPagarRestante;
+	private JButton btnPagarSinal;
+	
 	public TelaReservas(Usuario usuario) {
 		setLayout(new BorderLayout(0, 0));
 		this.usuario = usuario;
@@ -68,22 +77,64 @@ public class TelaReservas extends JPanel {
 		add(painelBotoes, BorderLayout.SOUTH);
 		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnPagarSinal = new JButton("Pagar Sinal");
+		btnPagarSinal = new JButton("Pagar Sinal");
 		painelBotoes.add(btnPagarSinal);
 		
-		JButton btnNewButton_1 = new JButton("Pagar Restante");
-		painelBotoes.add(btnNewButton_1);
+		btnPagarRestante = new JButton("Pagar Restante");
+		painelBotoes.add(btnPagarRestante);
 		
-		JButton btnNewButton = new JButton("Iniciar Locação");
-		painelBotoes.add(btnNewButton);
+		btnIniciarLocacao = new JButton("Iniciar Locação");
+		painelBotoes.add(btnIniciarLocacao);
 	}
 
 	private void configurarEventos() {
+		btnPagarSinal.addActionListener(e -> {
+			int linhaSelecionada = tabelaReservas.getSelectedRow();
+			InfoReserva reservaSelecionada = getReservaSelecionada();
+			
+			if (linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
+				return;
+			}
+			
+			if(reservaSelecionada.getDataPagSinal() != null) {
+				JOptionPane.showMessageDialog(this, "Você já pagou o sinal.");
+				return;
+			}
+			controller.setReservaSelecionada(reservaSelecionada);
+			controller.pagar(SINAL);
+		});
+
+		btnPagarRestante.addActionListener(e -> {
+			int linhaSelecionada = tabelaReservas.getSelectedRow();
+			InfoReserva reservaSelecionada = getReservaSelecionada();
+			if (linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
+				return;
+			}
+			
+			if(reservaSelecionada.getDataPagSinal() != null) {
+				JOptionPane.showMessageDialog(this, "Você já pagou o restante.");
+				return;
+			}
+			controller.setReservaSelecionada(reservaSelecionada);
+			controller.pagar(RESTANTE);
+		});
+
+		/* btnIniciarLocacao.addActionListener(e -> {
+			int linhaSelecionada = tabelaReservas.getSelectedRow();
+			if (linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
+				return;
+			}
+			
+			controller.iniciarLocacao(getReservaSelecionada().getIdReserva()); 
+		}); */
 	}
 
 	public void preencherTabela(List<InfoReserva> reservas) {
+		this.reservasAtuais = reservas;
 		modeloTabela.setRowCount(0);
-
 		for (InfoReserva r : reservas) {
 			modeloTabela.addRow(new Object[] {
 				r.getGrupoCarro(),
@@ -95,6 +146,15 @@ public class TelaReservas extends JPanel {
 				r.getStatusPagamento()
 			});
 		}
+	}
+	
+	private InfoReserva getReservaSelecionada() {
+		int linhaSelecionada = tabelaReservas.getSelectedRow();
+		if (linhaSelecionada == -1) {
+			JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
+			return null;
+		}
+		return reservasAtuais.get(linhaSelecionada);
 	}
 
 	public JTable getTabelaReservas() {
