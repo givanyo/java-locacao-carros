@@ -11,7 +11,22 @@ public class InfoReserva {
 	private float valorTotal;
 	private LocalDate dataPagSinal;
 	private LocalDate dataPagRestante;
-	
+	public String getStatusPagamento() {
+		
+		if (dataPagSinal == null && dataPagRestante == null) {
+			return "A pagar";
+		}
+		if (dataPagSinal != null && dataPagRestante == null) {
+			return "Sinal Pago";
+		}
+		
+		if (dataPagSinal == null && dataPagRestante != null) {
+			return "Sinal Pendente";
+		}
+		
+		return "Pago";
+		
+	}
 	public String getGrupoCarro() {
 		return grupoCarro;
 	}

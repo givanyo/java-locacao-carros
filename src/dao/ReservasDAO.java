@@ -4,6 +4,7 @@ import model.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,8 +63,11 @@ public class ReservasDAO {
 				infoReserva.setRestante(rs.getFloat("valor_restante"));
 				infoReserva.setValorTotal(rs.getFloat("valor_total"));
 				
-				infoReserva.setDataPagSinal(rs.getDate("data_pag_sinal").toLocalDate());
-				infoReserva.setDataPagRestante(rs.getDate("data_pag_restante").toLocalDate());
+				Date dataPagSinal = rs.getDate("data_pag_sinal");
+				infoReserva.setDataPagSinal(dataPagSinal != null ? dataPagSinal.toLocalDate() : null);
+
+				Date dataPagRestante = rs.getDate("data_pag_restante");
+				infoReserva.setDataPagRestante(dataPagRestante != null ? dataPagRestante.toLocalDate() : null);
 				
 				reservasBanco.add(infoReserva);
 			} 

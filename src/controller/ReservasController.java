@@ -1,18 +1,19 @@
 package controller;
 import model.Usuario;
-import view.TelaPrincipal;
+import view.TelaReservas;
 import dao.ReservasDAO;
 public class ReservasController {
 	Usuario cliente;
-	TelaPrincipal telaPrincipal;
 	ReservasDAO dao;
-	public ReservasController(Usuario cliente, TelaPrincipal telaPrincipal) {
+	TelaReservas telaReservas;
+	public ReservasController(Usuario cliente, TelaReservas telaReservas) {
 		this.cliente = cliente;
-		this.telaPrincipal = telaPrincipal;
+		this.telaReservas = telaReservas;
 		this.dao = new ReservasDAO(cliente);
+		consultarReservas();
 	}
 	
 	private void consultarReservas() {
-		dao.consultarReservas();
+		telaReservas.preencherTabela(dao.consultarReservas());
 	}
 }	
