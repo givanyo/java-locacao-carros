@@ -108,6 +108,36 @@ public class ReservasDAO {
         }
 	}
 	
+	public void efetivarLocacao() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "CALL gerar_locacao(?)";
+		try {
+			conn = Conexao.conectar();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, reservaSelecionada.getIdReserva());
+			rs = stmt.executeQuery();
+		} catch(Exception e) {
+			throw new RuntimeException("Erro ao iniciar locação: " + e.getMessage());
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void setReservaSelecionada(InfoReserva reservaSelecionada) {
 		this.reservaSelecionada = reservaSelecionada;
 	}

@@ -90,13 +90,13 @@ public class TelaReservas extends JPanel {
 	private void configurarEventos() {
 		btnPagarSinal.addActionListener(e -> {
 			int linhaSelecionada = tabelaReservas.getSelectedRow();
-			InfoReserva reservaSelecionada = getReservaSelecionada();
 			
 			if (linhaSelecionada == -1) {
 				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
 				return;
 			}
 			
+			InfoReserva reservaSelecionada = getReservaSelecionada();
 			if(reservaSelecionada.getDataPagSinal() != null) {
 				JOptionPane.showMessageDialog(this, "Você já pagou o sinal.");
 				return;
@@ -107,29 +107,42 @@ public class TelaReservas extends JPanel {
 
 		btnPagarRestante.addActionListener(e -> {
 			int linhaSelecionada = tabelaReservas.getSelectedRow();
-			InfoReserva reservaSelecionada = getReservaSelecionada();
+			
 			if (linhaSelecionada == -1) {
 				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
 				return;
 			}
+			
+			InfoReserva reservaSelecionada = getReservaSelecionada();
 			
 			if(reservaSelecionada.getDataPagRestante() != null) {
 				JOptionPane.showMessageDialog(this, "Você já pagou o restante.");
 				return;
 			}
+			
 			controller.setReservaSelecionada(reservaSelecionada);
 			controller.pagar(RESTANTE);
 		});
 
-		/* btnIniciarLocacao.addActionListener(e -> {
+		 btnIniciarLocacao.addActionListener(e -> {
 			int linhaSelecionada = tabelaReservas.getSelectedRow();
+			
+			
 			if (linhaSelecionada == -1) {
 				JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
 				return;
 			}
 			
-			controller.iniciarLocacao(getReservaSelecionada().getIdReserva()); 
-		}); */
+			InfoReserva reservaSelecionada = getReservaSelecionada();
+			
+			if(reservaSelecionada.getStatusPagamento() != "Pago") {
+				JOptionPane.showMessageDialog(this, "Você não pode efetivar a reserva antes de finalizar o pagamento.");
+				return;
+			}
+			
+			controller.setReservaSelecionada(reservaSelecionada);
+			controller.efetivarLocacao(); 
+		});
 	}
 
 	public void preencherTabela(List<InfoReserva> reservas) {
@@ -150,10 +163,6 @@ public class TelaReservas extends JPanel {
 	
 	private InfoReserva getReservaSelecionada() {
 		int linhaSelecionada = tabelaReservas.getSelectedRow();
-		if (linhaSelecionada == -1) {
-			JOptionPane.showMessageDialog(this, "Selecione uma reserva primeiro.");
-			return null;
-		}
 		return reservasAtuais.get(linhaSelecionada);
 	}
 

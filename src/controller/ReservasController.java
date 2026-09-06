@@ -28,6 +28,13 @@ public class ReservasController {
 		consultarReservas();
 	}
 	
+	public void efetivarLocacao() {
+		dao.setReservaSelecionada(this.reservaSelecionada);
+		dao.efetivarLocacao();
+		consultarReservas();
+		JOptionPane.showMessageDialog(telaReservas, "A sua reserva foi efetivada e já está disponível na aba Locações.");
+	}
+	
 	public void setReservaSelecionada(InfoReserva reservaSelecionada) {
 		this.reservaSelecionada = reservaSelecionada;
 	}
