@@ -105,7 +105,7 @@ INSERT INTO categoria (grupo, titulo, descricao, pessoas, valor_diaria) VALUES
 	('B', 'Compacto Com Ar', 'FIAT MOBI 1.0, RENAULT KWID 1.0 OU SIMILAR', 4, 74.29),
     ('C', 'Econômico Com Ar', 'GM ONIX JOY 1.0, VW GOL 1.0 OU SIMILAR', 5, 85.99),
 	('CE', 'Econômico Especial C/ar', 'HYUNDAI HB20 1.0, FIAT ARGO 1.0, VW POLO 1.0 OU SIMILAR', 5, 95.49);
-
+    
 INSERT INTO carro (id_categoria, modelo, placa) VALUES
 	(1, 'FIAT MOBI 1.0', 'ABC1234'),
     (1, 'RENAULT KWID 1.0', 'DEF1234'),
@@ -114,7 +114,7 @@ INSERT INTO carro (id_categoria, modelo, placa) VALUES
     (3, 'HYUNDAI HB20 1.0', 'LMN1234'),
     (3, 'FIAT ARGO 1.0', 'OPQ1234'),
     (3, 'VW POLO 1.0', 'RST1234');
-    
+
 DELIMITER // 
 CREATE TRIGGER after_inserir_reserva
 AFTER INSERT ON pre_reserva
@@ -130,6 +130,8 @@ BEGIN
         INNER JOIN categoria
         ON carro.id_categoria = categoria.id
         WHERE carro.id = NEW.id_carro;
+        
+        UPDATE carro SET disponivel = FALSE WHERE carro.id = NEW.id_carro;
 END //
 DELIMITER ;
 
@@ -138,7 +140,7 @@ INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VA
     (1, 5, '2026-09-26', 7),
     (2, 2, '2026-09-25', 3),
     (3, 3, '2026-11-11', 4);
-    
+
 DELIMITER //
 CREATE PROCEDURE gerar_locacao(
 	IN id_pr INT,
