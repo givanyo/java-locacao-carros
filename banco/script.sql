@@ -169,7 +169,8 @@ BEGIN
 	ON pre_reserva.id_carro = carro.id
 	INNER JOIN categoria
 	ON carro.id_categoria = categoria.id 
-	WHERE cliente.id = id_cliente AND pre_reserva.id NOT IN (SELECT id FROM locacao);
+	WHERE cliente.id = id_cliente AND pre_reserva.id NOT IN (SELECT id FROM locacao)
+    ORDER BY pre_reserva.id ASC;
 END //
 DELIMITER ;
 
