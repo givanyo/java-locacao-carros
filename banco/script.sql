@@ -236,3 +236,15 @@ BEGIN
 	);
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE criar_pre_reserva(
+IN id_cliente INT,
+IN id_carro INT,
+IN dt_inicio DATE,
+IN dt_fim DATE)
+BEGIN 
+	INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VALUES
+    (id_cliente, id_carro, dt_inicio, DATEDIFF(dt_fim, dt_inicio));
+END //
+DELIMITER ;
