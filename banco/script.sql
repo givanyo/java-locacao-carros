@@ -35,8 +35,7 @@ CREATE TABLE IF NOT EXISTS carro(
     FOREIGN KEY(id_categoria)
 		REFERENCES categoria(id),
 	modelo VARCHAR(100),
-    placa CHAR(7) NOT NULL,
-    disponivel BOOLEAN DEFAULT TRUE
+    placa CHAR(7) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cartao_credito(
@@ -131,8 +130,6 @@ BEGIN
         INNER JOIN categoria
         ON carro.id_categoria = categoria.id
         WHERE carro.id = NEW.id_carro;
-        
-        UPDATE carro SET disponivel = FALSE WHERE carro.id = NEW.id_carro;
 END //
 DELIMITER ;
 
@@ -193,7 +190,6 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE cancelar_reserva(IN id_pre_reserva INT)
 BEGIN
-	UPDATE carro SET disponivel = TRUE WHERE id = (SELECT id_carro FROM pre_reserva WHERE id = id_pre_reserva); 
 	DELETE FROM pre_reserva WHERE id = id_pre_reserva;
 END // 
 DELIMITER ;
@@ -214,4 +210,29 @@ BEGIN
 	WHERE pre_reserva.id_cliente = id_cliente
 	ORDER BY locacao.data_inicio ASC;
 END // 
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE selecionar_carros_disponiveis(
+IN dt_inicio DATE,
+IN dt_fim DATE
+)
+BEGIN
+	SELECT
+	carro.id AS id_carro,
+	categoria.titulo AS tipo_carro,
+	carro.modelo,
+	categoria.pessoas,
+	categoria.valor_diaria
+	FROM carro
+	INNER JOIN categoria
+	ON carro.id_categoria = categoria.id
+	WHERE NOT EXISTS (
+		SELECT id
+		FROM pre_reserva
+		WHERE pre_reserva.id_carro = carro.id
+		AND pre_reserva.previsao_inicio <= dt_fim
+		AND pre_reserva.previsao_inicio + INTERVAL pre_reserva.duracao_dias DAY >= dt_inicio
+	);
+END //
 DELIMITER ;
