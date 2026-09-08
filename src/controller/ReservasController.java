@@ -35,6 +35,10 @@ public class ReservasController {
 		JOptionPane.showMessageDialog(telaReservas, "A sua reserva foi efetivada e já está disponível na aba Locações.");
 	}
 	
+	public void atualizar() {
+		consultarReservas();
+	}
+	
 	public void setReservaSelecionada(InfoReserva reservaSelecionada) {
 		this.reservaSelecionada = reservaSelecionada;
 	}
