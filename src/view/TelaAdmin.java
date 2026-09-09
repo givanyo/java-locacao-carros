@@ -24,6 +24,7 @@ public class TelaAdmin extends JPanel{
 		abasAdmin = new JTabbedPane();
 		add(abasAdmin, BorderLayout.CENTER);
 		abasAdmin.add(new TelaAdminCarro(usuario), "Gerenciar carros");
+		abasAdmin.add(new TelaCadastro(), "Cadastrar Usuários");
 	}
 
 	private void configurarEventos() {
