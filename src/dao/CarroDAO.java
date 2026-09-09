@@ -62,5 +62,34 @@ public class CarroDAO {
 				e.printStackTrace();}
 			}
 		}
+	public boolean adicionarCarro(int idCategoria, String modelo, String placa) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    String sql = "INSERT INTO carro (id_categoria, modelo, placa) VALUES (?, ?, ?)";
 
+	    try {
+	        conn = Conexao.conectar();
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, idCategoria);
+	        stmt.setString(2, modelo);
+	        stmt.setString(3, placa);
+
+	        int linhasAfetadas = stmt.executeUpdate();
+	        return linhasAfetadas > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        try {
+	            if (stmt != null) {
+	                stmt.close();
+	            }
+	            if (conn != null) {
+	                conn.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 }
