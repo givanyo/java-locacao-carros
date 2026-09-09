@@ -12,11 +12,10 @@ import java.time.LocalDate;
 
 import util.Conexao;
 
-public class ReservaCarroDAO {
+public class CarroDAO {
 	private Usuario cliente;
-	private InfoCarro carroSelecionado;
 
-	public ReservaCarroDAO(Usuario cliente) {
+	public CarroDAO(Usuario cliente) {
 		this.cliente = cliente;
 	}
 
@@ -63,41 +62,5 @@ public class ReservaCarroDAO {
 				e.printStackTrace();}
 			}
 		}
-
-	public void criarPreReserva(LocalDate dataInicio, LocalDate dataFim) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		String sql = "CALL criar_pre_reserva(?, ?, ?, ?)";
-
-		try {
-			conn = Conexao.conectar();
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, cliente.getIdUsuario());
-			stmt.setInt(2, carroSelecionado.getIdCarro());
-			stmt.setDate(3, java.sql.Date.valueOf(dataInicio));
-			stmt.setDate(4, java.sql.Date.valueOf(dataFim));
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) {
-					rs.close();
-				}
-				if(stmt != null) {
-					stmt.close();
-				}
-				if(conn != null) {
-					conn.close();
-				}
-			} catch(Exception e) {
-				e.printStackTrace();}
-			}
-		}
-
-	public void setCarroSelecionado(InfoCarro carroSelecionado) {
-		this.carroSelecionado = carroSelecionado;
-	}
 
 }

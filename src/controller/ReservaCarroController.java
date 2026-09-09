@@ -5,14 +5,16 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import dao.ReservaCarroDAO;
+import dao.CarroDAO;
+import dao.ReservasDAO;
 import model.InfoCarro;
 import model.Usuario;
 import view.TelaReservaCarro;
 
 public class ReservaCarroController {
 	private Usuario cliente;
-	private ReservaCarroDAO dao;
+	private CarroDAO carroDAO;
+	private ReservasDAO reservasDAO;
 	private TelaReservaCarro telaReservaCarro;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
@@ -20,7 +22,8 @@ public class ReservaCarroController {
 	public ReservaCarroController(Usuario cliente, TelaReservaCarro telaReservaCarro) {
 		this.cliente = cliente;
 		this.telaReservaCarro = telaReservaCarro;
-		this.dao = new ReservaCarroDAO(cliente);
+		this.carroDAO = new CarroDAO(cliente);
+		this.reservasDAO = new ReservasDAO(cliente);
 	}
 
 	public void iniciarReserva(InfoCarro carroSelecionado, LocalDate dataInicio, LocalDate dataFim) {
@@ -34,8 +37,8 @@ public class ReservaCarroController {
 			return;
 		}
 
-		dao.setCarroSelecionado(carroSelecionado);
-		dao.criarPreReserva(dataInicio, dataFim);
+		reservasDAO.setCarroSelecionado(carroSelecionado);
+		reservasDAO.criarPreReserva(dataInicio, dataFim);
 
 		JOptionPane.showMessageDialog(telaReservaCarro, "Pré-reserva criada com sucesso!");
 		telaReservaCarro.atualizar();
@@ -46,7 +49,7 @@ public class ReservaCarroController {
 			JOptionPane.showMessageDialog(telaReservaCarro, "A data de fim da locação deve ser após a data de início.");
 			return null;
 		}
-		return dao.consultarCarros(dataInicio, dataFim);
+		return carroDAO.consultarCarros(dataInicio, dataFim);
 	}
 
 	public void setDataInicio(LocalDate dataInicio) {
