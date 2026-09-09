@@ -248,3 +248,24 @@ BEGIN
 	ON carro.id_categoria = categoria.id;
 END //
 DELIMITER ; 
+
+DELIMITER //
+
+CREATE PROCEDURE cadastrar_cliente(
+	IN p_nome_usuario VARCHAR(50),
+	IN p_email VARCHAR(100),
+	IN p_senha VARCHAR(100),
+	IN p_nome VARCHAR(100),
+	IN p_telefone VARCHAR(11),
+	IN p_cnh CHAR(11),
+	IN p_cpf CHAR(11)
+)
+BEGIN
+	INSERT INTO usuario (nome_usuario, email, senha, adm)
+	VALUES (p_nome_usuario, p_email, p_senha, FALSE);
+
+	INSERT INTO cliente (id, nome, telefone, cnh, cpf)
+	VALUES (LAST_INSERT_ID(), p_nome, p_telefone, p_cnh, p_cpf);
+END //
+
+DELIMITER ;
