@@ -38,16 +38,6 @@ CREATE TABLE IF NOT EXISTS carro(
     placa CHAR(7) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS cartao_credito(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_cliente INT NOT NULL UNIQUE,
-	FOREIGN KEY(id_cliente)
-		REFERENCES cliente(id),
-    nome_cartao VARCHAR(100),
-    numero_cartao CHAR(20) UNIQUE,
-    limite DECIMAL(10, 2)
-);
-
 CREATE TABLE IF NOT EXISTS pre_reserva(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_cliente INT NOT NULL,
