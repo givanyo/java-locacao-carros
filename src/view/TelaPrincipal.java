@@ -8,7 +8,7 @@ public class TelaPrincipal extends JFrame {
 	private String tituloExibido;
 	public static final String[] TELALOGIN = {"telaLogin", "Login"};
 	public static final String[] TELACLIENTE = {"telaCliente", "Sistema de Locação de Carros (CLIENTE)"};
-	public static final String[] TELARESERVAS = {"telaReservas", "Suas reservas"};
+	public static final String[] TELAADMIN = {"telaAdmin", "Sistema de Locação de Carros (ADMIN)"};
 	
 	public TelaPrincipal() {
 		setTitle("Carregando");
@@ -25,15 +25,16 @@ public class TelaPrincipal extends JFrame {
 			setSize(600, 400);
 			return;
 		}
-		
 	}
 	
 	public void trocarTela(Usuario usuario) {
 		if(usuario.getAdm() == true) {
-			return;
+			this.telaExibida = new TelaAdmin(usuario);
+			this.tituloExibido = TELAADMIN[1];
+		} else {
+			this.telaExibida = new TelaCliente(usuario);
+			this.tituloExibido = TELACLIENTE[1];
 		}
-		this.telaExibida = new TelaCliente(usuario);
-		this.tituloExibido = TELACLIENTE[1];
 		atualizar();
 		setSize(800, 480);
 		return;

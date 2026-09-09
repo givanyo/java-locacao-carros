@@ -13,7 +13,8 @@ public class TelaCliente extends JPanel {
 
 	private TelaReservas telaReservas;
 	private TelaLocacao telaLocacao;
-
+	private TelaReservaCarro telaReservaCarro;
+	
 	public TelaCliente(Usuario usuario) {
 		this.usuario = usuario;
 		setLayout(new BorderLayout(0, 0));
@@ -31,12 +32,23 @@ public class TelaCliente extends JPanel {
 
 		telaLocacao = new TelaLocacao(usuario);
 		abasCliente.addTab("Minhas Locações", telaLocacao);
+		
+		telaReservaCarro = new TelaReservaCarro(usuario);
+		abasCliente.addTab("Pré-reservar", telaReservaCarro);
 	}
 
 	private void configurarEventos() {
 		abasCliente.addChangeListener(e -> {
-			if (abasCliente.getSelectedComponent() == telaLocacao) {
+			telaReservaCarro.setSendoExibida(false);
+			if (abasCliente.getSelectedComponent() == telaReservas) {
+				telaReservas.atualizar();
+			}
+ 			if (abasCliente.getSelectedComponent() == telaLocacao) {
 				telaLocacao.atualizar();
+			}
+			if(abasCliente.getSelectedComponent() == telaReservaCarro) {
+				telaReservaCarro.atualizar();
+				telaReservaCarro.setSendoExibida(true);
 			}
 		});
 	}

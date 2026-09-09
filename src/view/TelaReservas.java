@@ -32,7 +32,7 @@ public class TelaReservas extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 		this.usuario = usuario;
 		this.modeloTabela = new DefaultTableModel(
-				new Object[]{"Grupo", "Modelo", "Duração (Dias)", "Sinal", "Restante", "Total", "Status"}, 0
+				new Object[]{"Id", "Grupo", "Modelo", "Duração (Dias)", "Sinal", "Restante", "Total", "Status"}, 0
 			) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -150,6 +150,7 @@ public class TelaReservas extends JPanel {
 		modeloTabela.setRowCount(0);
 		for (InfoReserva r : reservas) {
 			modeloTabela.addRow(new Object[] {
+				r.getIdReserva(),
 				r.getGrupoCarro(),
 				r.getModeloCarro(),
 				r.getDuracaoDias(),
@@ -160,7 +161,9 @@ public class TelaReservas extends JPanel {
 			});
 		}
 	}
-	
+	public void atualizar() {
+		controller.atualizar();
+	}
 	private InfoReserva getReservaSelecionada() {
 		int linhaSelecionada = tabelaReservas.getSelectedRow();
 		return reservasAtuais.get(linhaSelecionada);

@@ -3,8 +3,8 @@ USE java_locacao_carros;
 
 CREATE TABLE IF NOT EXISTS usuario(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nome_usuario VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    nome_usuario VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL,
     adm BOOLEAN DEFAULT FALSE
 );
@@ -35,18 +35,7 @@ CREATE TABLE IF NOT EXISTS carro(
     FOREIGN KEY(id_categoria)
 		REFERENCES categoria(id),
 	modelo VARCHAR(100),
-    placa CHAR(7) NOT NULL,
-    disponivel BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE IF NOT EXISTS cartao_credito(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_cliente INT NOT NULL UNIQUE,
-	FOREIGN KEY(id_cliente)
-		REFERENCES cliente(id),
-    nome_cartao VARCHAR(100),
-    numero_cartao CHAR(20) UNIQUE,
-    limite DECIMAL(10, 2)
+    placa CHAR(7) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pre_reserva(
@@ -96,12 +85,6 @@ INSERT INTO cliente (id, nome, telefone, cnh, cpf) VALUES
     (3, 'Rita de Cássia', '31912345678', '00323456789', '32345678901'),
     (4, 'Marcos Ferreira', '41912345678', '00423456789', '42345678901');
 
-INSERT INTO cartao_credito (id_cliente, nome_cartao, numero_cartao, limite) VALUES
-    (1, 'Jeff. R.', '1234 5678 9012 3456', 50000.99),
-    (2, 'Beatriz D.', '2234 5678 9012 3456', 21000.99),
-    (3, 'Rita de C.', '3234 5678 9012 3456', 6400),
-    (4, 'Marcos F.', '4234 5678 9012 3456', 1000.09);
-
 INSERT INTO categoria (grupo, titulo, descricao, pessoas, valor_diaria) VALUES
 	('B', 'Compacto Com Ar', 'FIAT MOBI 1.0, RENAULT KWID 1.0 OU SIMILAR', 4, 74.29),
     ('C', 'Econômico Com Ar', 'GM ONIX JOY 1.0, VW GOL 1.0 OU SIMILAR', 5, 85.99),
@@ -131,8 +114,6 @@ BEGIN
         INNER JOIN categoria
         ON carro.id_categoria = categoria.id
         WHERE carro.id = NEW.id_carro;
-        
-        UPDATE carro SET disponivel = FALSE WHERE carro.id = NEW.id_carro;
 END //
 DELIMITER ;
 
@@ -172,7 +153,8 @@ BEGIN
 	ON pre_reserva.id_carro = carro.id
 	INNER JOIN categoria
 	ON carro.id_categoria = categoria.id 
-	WHERE cliente.id = id_cliente AND pre_reserva.id NOT IN (SELECT id FROM locacao);
+	WHERE cliente.id = id_cliente AND pre_reserva.id NOT IN (SELECT id FROM locacao)
+    ORDER BY pre_reserva.id ASC;
 END //
 DELIMITER ;
 
@@ -193,7 +175,6 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE cancelar_reserva(IN id_pre_reserva INT)
 BEGIN
-	UPDATE carro SET disponivel = TRUE WHERE id = (SELECT id_carro FROM pre_reserva WHERE id = id_pre_reserva); 
 	DELETE FROM pre_reserva WHERE id = id_pre_reserva;
 END // 
 DELIMITER ;
@@ -214,4 +195,77 @@ BEGIN
 	WHERE pre_reserva.id_cliente = id_cliente
 	ORDER BY locacao.data_inicio ASC;
 END // 
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE selecionar_carros_disponiveis(
+IN dt_inicio DATE,
+IN dt_fim DATE
+)
+BEGIN
+	SELECT
+	carro.id AS id_carro,
+	categoria.titulo AS tipo_carro,
+	carro.modelo,
+	categoria.pessoas,
+	categoria.valor_diaria
+	FROM carro
+	INNER JOIN categoria
+	ON carro.id_categoria = categoria.id
+	WHERE NOT EXISTS (
+		SELECT id
+		FROM pre_reserva
+		WHERE pre_reserva.id_carro = carro.id
+		AND pre_reserva.previsao_inicio <= dt_fim
+		AND pre_reserva.previsao_inicio + INTERVAL pre_reserva.duracao_dias DAY >= dt_inicio
+	);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE criar_pre_reserva(
+IN id_cliente INT,
+IN id_carro INT,
+IN dt_inicio DATE,
+IN dt_fim DATE)
+BEGIN 
+	INSERT INTO pre_reserva (id_cliente, id_carro, previsao_inicio, duracao_dias) VALUES
+    (id_cliente, id_carro, dt_inicio, DATEDIFF(dt_fim, dt_inicio));
+END //
+DELIMITER ;
+DELIMITER //
+CREATE PROCEDURE selecionar_todos_carros()
+BEGIN
+	SELECT
+	carro.id AS id_carro,
+	categoria.titulo AS tipo_carro,
+	carro.modelo,
+    carro.placa,
+	categoria.pessoas,
+	categoria.valor_diaria
+	FROM carro
+	INNER JOIN categoria
+	ON carro.id_categoria = categoria.id;
+END //
+DELIMITER ; 
+
+DELIMITER //
+
+CREATE PROCEDURE cadastrar_cliente(
+	IN p_nome_usuario VARCHAR(50),
+	IN p_email VARCHAR(100),
+	IN p_senha VARCHAR(100),
+	IN p_nome VARCHAR(100),
+	IN p_telefone VARCHAR(11),
+	IN p_cnh CHAR(11),
+	IN p_cpf CHAR(11)
+)
+BEGIN
+	INSERT INTO usuario (nome_usuario, email, senha, adm)
+	VALUES (p_nome_usuario, p_email, p_senha, FALSE);
+
+	INSERT INTO cliente (id, nome, telefone, cnh, cpf)
+	VALUES (LAST_INSERT_ID(), p_nome, p_telefone, p_cnh, p_cpf);
+END //
+
 DELIMITER ;
