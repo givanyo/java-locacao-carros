@@ -8,7 +8,6 @@ public class TelaPrincipal extends JFrame {
 	private String tituloExibido;
 	public static final String[] TELALOGIN = {"telaLogin", "Login"};
 	public static final String[] TELACLIENTE = {"telaCliente", "Sistema de Locação de Carros (CLIENTE)"};
-	public static final String[] TELARESERVAS = {"telaReservas", "Suas reservas"};
 	public static final String[] TELAADMIN = {"telaAdmin", "Sistema de Locação de Carros (ADMIN)"};
 	
 	public TelaPrincipal() {
