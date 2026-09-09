@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import util.Conexao;
-
+import model.Categoria;
 public class CarroDAO {
 	private Usuario cliente;
 
@@ -81,6 +81,90 @@ public class CarroDAO {
 	        return false;
 	    } finally {
 	        try {
+	            if (stmt != null) {
+	                stmt.close();
+	            }
+	            if (conn != null) {
+	                conn.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	public List<Categoria> consultarCategorias() {
+	    List<Categoria> categorias = new ArrayList<>();
+
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    String sql = "SELECT id AS id_categoria, titulo FROM categoria";
+
+	    try {
+	        conn = Conexao.conectar();
+	        stmt = conn.prepareStatement(sql);
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            Categoria categoria = new Categoria();
+	            categoria.setIdCategoria(rs.getInt("id_categoria"));
+	            categoria.setTitulo(rs.getString("titulo"));
+	            categorias.add(categoria);
+	        }
+	        return categorias;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        try {
+	            if (rs != null) {
+	                rs.close();
+	            }
+	            if (stmt != null) {
+	                stmt.close();
+	            }
+	            if (conn != null) {
+	                conn.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	public List<InfoCarro> consultarTodosCarros() {
+	    List<InfoCarro> carros = new ArrayList<>();
+
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    String sql = "CALL selecionar_todos_carros()";
+
+	    try {
+	        conn = Conexao.conectar();
+	        stmt = conn.prepareStatement(sql);
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            InfoCarro carro = new InfoCarro();
+	            carro.setIdCarro(rs.getInt("id_carro"));
+	            carro.setTipoCarro(rs.getString("tipo_carro"));
+	            carro.setModeloCarro(rs.getString("modelo"));
+	            carro.setPlaca(rs.getString("placa"));
+	            carro.setPessoas(rs.getInt("pessoas"));
+	            carro.setValorDiaria(rs.getFloat("valor_diaria"));
+	            carros.add(carro);
+	        }
+	        return carros;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return null;
+	    } finally {
+	        try {
+	            if (rs != null) {
+	                rs.close();
+	            }
 	            if (stmt != null) {
 	                stmt.close();
 	            }

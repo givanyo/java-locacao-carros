@@ -7,7 +7,10 @@ public class Categoria {
 	private String descricao;
 	private int pessoas;
 	private float valorDiaria;
-	
+	@Override
+	public String toString() {
+	    return titulo;
+	}
 	public int getIdCategoria() {
 		return idCategoria;
 	}

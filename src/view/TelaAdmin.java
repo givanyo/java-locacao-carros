@@ -23,8 +23,7 @@ public class TelaAdmin extends JPanel{
 	private void criarComponentes() {
 		abasAdmin = new JTabbedPane();
 		add(abasAdmin, BorderLayout.CENTER);
-
-
+		abasAdmin.add(new TelaAdminCarro(usuario), "Gerenciar carros");
 	}
 
 	private void configurarEventos() {

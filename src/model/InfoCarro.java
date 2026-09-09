@@ -6,6 +6,7 @@ public class InfoCarro {
 	private String modeloCarro;
 	private int pessoas;
 	private float valorDiaria;
+	private String placa;
 	
 	public int getIdCarro() {
 		return idCarro;
@@ -36,5 +37,11 @@ public class InfoCarro {
 	}
 	public void setValorDiaria(float valorDiaria) {
 		this.valorDiaria = valorDiaria;
+	}
+	public String getPlaca() {
+		return placa;
+	}
+	public void setPlaca(String placa) {
+		this.placa = placa;
 	}
 }
