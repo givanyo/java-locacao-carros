@@ -240,10 +240,11 @@ BEGIN
 	carro.id AS id_carro,
 	categoria.titulo AS tipo_carro,
 	carro.modelo,
+    carro.placa,
 	categoria.pessoas,
 	categoria.valor_diaria
 	FROM carro
 	INNER JOIN categoria
 	ON carro.id_categoria = categoria.id;
-END
+END //
 DELIMITER ; 
