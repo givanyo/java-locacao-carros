@@ -85,12 +85,6 @@ INSERT INTO cliente (id, nome, telefone, cnh, cpf) VALUES
     (3, 'Rita de Cássia', '31912345678', '00323456789', '32345678901'),
     (4, 'Marcos Ferreira', '41912345678', '00423456789', '42345678901');
 
-INSERT INTO cartao_credito (id_cliente, nome_cartao, numero_cartao, limite) VALUES
-    (1, 'Jeff. R.', '1234 5678 9012 3456', 50000.99),
-    (2, 'Beatriz D.', '2234 5678 9012 3456', 21000.99),
-    (3, 'Rita de C.', '3234 5678 9012 3456', 6400),
-    (4, 'Marcos F.', '4234 5678 9012 3456', 1000.09);
-
 INSERT INTO categoria (grupo, titulo, descricao, pessoas, valor_diaria) VALUES
 	('B', 'Compacto Com Ar', 'FIAT MOBI 1.0, RENAULT KWID 1.0 OU SIMILAR', 4, 74.29),
     ('C', 'Econômico Com Ar', 'GM ONIX JOY 1.0, VW GOL 1.0 OU SIMILAR', 5, 85.99),
@@ -239,3 +233,17 @@ BEGIN
     (id_cliente, id_carro, dt_inicio, DATEDIFF(dt_fim, dt_inicio));
 END //
 DELIMITER ;
+DELIMITER //
+CREATE PROCEDURE selecionar_todos_carros()
+BEGIN
+	SELECT
+	carro.id AS id_carro,
+	categoria.titulo AS tipo_carro,
+	carro.modelo,
+	categoria.pessoas,
+	categoria.valor_diaria
+	FROM carro
+	INNER JOIN categoria
+	ON carro.id_categoria = categoria.id;
+END
+DELIMITER ; 
